@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const config = require('config');
-const { check } = require('express-validator');
+const { check, validationResult } = require('express-validator');
 
 // @route   GET api/users
 // @desc    Get user logged in
@@ -32,14 +32,16 @@ router.post(
 
     try {
       let user = await User.findOne({ email });
+
       if (!user) {
         return res.status(400).json({ msg: 'invalid credentials' });
       }
 
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
-        return res.status(400).json({ msg: 'Invalid Credentials' });
+        return res.status(400).json({ msg: 'Invalid password' });
       }
+
       const payload = {
         user: {
           id: user.id,
@@ -59,9 +61,9 @@ router.post(
           res.json({ token });
         }
       );
-    } catch (error) {
+    } catch (err) {
       console.error(err.message);
-      res.send('Server Error').status(500);
+      res.status(500).send('Server Error');
     }
   }
 );
