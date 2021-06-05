@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
@@ -34,12 +35,12 @@ router.post(
       let user = await User.findOne({ email });
 
       if (!user) {
-        return res.status(400).json({ msg: 'invalid credentials' });
+        return res.status(400).json({ msg: 'invalid E-mail' });
       }
 
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
-        return res.status(400).json({ msg: 'Invalid password' });
+        return res.status(400).json({ msg: 'Invalid Password' });
       }
 
       const payload = {
@@ -63,7 +64,8 @@ router.post(
       );
     } catch (err) {
       console.error(err.message);
-      res.status(500).send('Server Error');
+
+      res.send('Server Error').status(500);
     }
   }
 );
