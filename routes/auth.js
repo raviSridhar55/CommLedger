@@ -5,18 +5,26 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const config = require('config');
+const auth = require('../middleware/auth');
 const { check, validationResult } = require('express-validator');
 
 // @route   GET api/users
 // @desc    Get user logged in
 // @access  Private
-router.get('/', (req, res) => {
-  res.send('get logged in a user');
+router.get('/', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    res.json(user);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
 });
 
 // @route   POST api/users
 // @desc    AUth user and get token
 // @access  Public
+
 router.post(
   '/',
   [
@@ -35,7 +43,7 @@ router.post(
       let user = await User.findOne({ email });
 
       if (!user) {
-        return res.status(400).json({ msg: 'invalid E-mail' });
+        return res.status(400).json({ msg: 'User not found' });
       }
 
       const isMatch = await bcrypt.compare(password, user.password);

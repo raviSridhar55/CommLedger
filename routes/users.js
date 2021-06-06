@@ -1,22 +1,22 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const { check, validationResult } = require("express-validator");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const User = require("../models/User");
-const config = require("config");
+const { check, validationResult } = require('express-validator');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+const config = require('config');
 
 // @route   POST api/users
-// @desc    Register a user
+// @desc    Register a user and get token
 // @access  Public
 router.post(
-  "/",
+  '/',
   [
-    check("name", "name is required").not().isEmpty(),
-    check("email", "Please include a valid email").isEmail(),
+    check('name', 'name is required').not().isEmpty(),
+    check('email', 'Please include a valid email').isEmail(),
     check(
-      "password",
-      "Please enter a password with 6 or more characters"
+      'password',
+      'Please enter a password with 6 or more characters'
     ).isLength({ min: 6 }),
   ],
   async (req, res) => {
@@ -31,7 +31,7 @@ router.post(
       let user = await User.findOne({ email });
 
       if (user) {
-        return res.status(400).json({ msg: "User exists" });
+        return res.status(400).json({ msg: 'User exists' });
       }
 
       user = new User({
@@ -54,7 +54,7 @@ router.post(
 
       jwt.sign(
         payload,
-        config.get("jwtSecret"),
+        config.get('jwtSecret'),
         {
           expiresIn: 3600000,
         },
@@ -67,7 +67,7 @@ router.post(
       );
     } catch (err) {
       console.error(err.message);
-      res.status(500).send("server error");
+      res.status(500).send('server error');
     }
   }
 );
