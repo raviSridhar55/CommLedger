@@ -1,14 +1,15 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { check, validationResult } = require('express-validator');
-const User = require('../models/User');
-const auth = require('../middleware/auth');
-const Contact = require('../models/Contact');
+const { check, validationResult } = require("express-validator/check");
+const auth = require("../middleware/auth");
 
-// @route   GET api/contacts
-// @desc    Get all contacts
-// @access  Private
-router.get('/', auth, async (req, res) => {
+const Contact = require("../models/Contact");
+const User = require("../models/User");
+
+// @route    GET api/contacts
+// @desc     Get all contacts
+// @access   Private
+router.get("/", auth, async (req, res) => {
   try {
     const contacts = await Contact.find({ user: req.user.id }).sort({
       date: -1,
@@ -16,16 +17,25 @@ router.get('/', auth, async (req, res) => {
     res.json(contacts);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Error');
+    res.status(500).send("Server Error");
   }
 });
 
-// @route   POST api/contacts
-// @desc    Add new contact
-// @access  Private
+// @route    POST api/contacts
+// @desc     Create a contact
+// @access   Private
 router.post(
-  '/',
-  [auth, [check('name', 'Enter a name').not().isEmpty()]],
+  "/",
+  [
+    auth,
+    [
+      check("name", "Name is required").not().isEmpty(),
+      check("type", "Type must be personal or professional").isIn([
+        "personal",
+        "professional",
+      ]),
+    ],
+  ],
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -48,23 +58,23 @@ router.post(
       res.json(contact);
     } catch (err) {
       console.error(err.message);
-      res.status(500).send('Server error');
+      res.status(500).send("Server Error");
     }
   }
 );
 
-// @route   POST api/contacts/:id
-// @desc    Update a contact
-// @access  Private
-router.put('/:id', (req, res) => {
-  res.send('Update contacts');
+// @route    PUT api/contacts/:id
+// @desc     Update a contact
+// @access   Private
+router.put("/:id", (req, res) => {
+  res.send("update contacts");
 });
 
-// @route   POST api/contacts/:id
-// @desc    Delete a contact
-// @access  Private
-router.delete('/:id', (req, res) => {
-  res.send('Delete contacts');
+// @route    DELETE api/contacts/:id
+// @desc     Delete a contact
+// @access   Private
+router.delete("/:id", (req, res) => {
+  res.send("delete contacts");
 });
 
 module.exports = router;
