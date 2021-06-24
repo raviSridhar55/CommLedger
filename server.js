@@ -5,6 +5,9 @@ const app = express();
 
 // Connect Database
 connectDB();
+app.get("/", (req, res) => {
+  res.send("Welcome to CommLedger");
+});
 
 // Init Middleware
 app.use(express.json({ extended: false }));
