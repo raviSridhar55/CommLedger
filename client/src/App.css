@@ -2,11 +2,11 @@
 
 /* Global Styles */
 :root {
-  --primary-color: #003699;
-  --dark-color: #333333;
+  --primary-color: #2ec4b6;
+  --dark-color: #03045e;
   --light-color: #f4f4f4;
-  --danger-color: #dc3545;
-  --success-color: #28a745;
+  --danger-color: #d00000;
+  --success-color: #03045e;
 }
 
 * {
@@ -19,7 +19,7 @@ body {
   font-family: "Roboto", sans-serif;
   font-size: 1rem;
   line-height: 1.6;
-  background-color: #fff;
+  background-color: #e9ebf8;
   color: #333;
 }
 
@@ -93,7 +93,7 @@ img {
 /* Cards */
 .card {
   padding: 1rem;
-  border: #ccc 1px dotted;
+  border: #b4b8c5 1px dotted;
   margin: 0.7rem 0;
 }
 
