@@ -9,7 +9,13 @@ import Register from "./components/auth/Register";
 import AlertState from "./context/alert/AlertState";
 import Alerts from "./components/layout/Alerts";
 import Login from "./components/auth/Login";
+import setAuthToken from "./utils/setAuthToken";
+import PrivateRoute from "./components/Routing/PrivateRoute";
 import { Fragment } from "react";
+
+if (localStorage.token) {
+  setAuthToken(localStorage.token);
+}
 
 const App = () => {
   return (
@@ -22,7 +28,7 @@ const App = () => {
               <div className='container'>
                 <Alerts />
                 <Switch>
-                  <Route exact path='/' component={Home} />
+                  <PrivateRoute exact path='/' component={Home} />
                   <Route exact path='/about' component={About} />
                   <Route exact path='/register' component={Register} />
                   <Route exact path='/login' component={Login} />
